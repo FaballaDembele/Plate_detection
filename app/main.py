@@ -2,10 +2,12 @@ from fastapi import FastAPI, UploadFile, File
 import numpy as np
 import cv2
 
-from app.preprocessing import improve_image, correct_rotation
-from app.detection import detect_plate
-from app.ocr import ocr_multi, clean_and_validate
-
+from utils.preprocessing import improve_image,correct_rotation
+from utils.detection import detect_plate
+from utils.ocr import ocr_multi,clean_and_validate
+from fastapi import FastAPI, UploadFile, File
+from   utils.detection import detect_plate
+# from utils.detection import detect_plate_fallback
 app = FastAPI(title="API Reconnaissance Plaques")
 
 @app.get("/",
@@ -29,8 +31,8 @@ async def scan_plate(file: UploadFile = File(...)):
     improved = improve_image(img)
     plate = detect_plate(img)
     if plate is None:
-        plate = improved
-    plate = correct_rotation(plate)
+       plate = improved
+
 
     texts = ocr_multi(plate)
     final_text = clean_and_validate(texts)
